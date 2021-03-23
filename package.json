@@ -1,5 +1,5 @@
 {
-	"name": "bide",
+	"name": "bimed",
 	"version": "1.0.0",
 	"description": "A binary-to-pixel image encoder/decoder",
 	"main": "./dist/index.js",
