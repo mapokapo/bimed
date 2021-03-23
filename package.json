@@ -13,9 +13,9 @@
 	"author": "mapokapo",
 	"repository": "https://github.com/mapokapo/bide",
 	"bin": {
-		"bide": "./dist/bin/cli.js"
+		"bimed": "./dist/bin/cli.js"
 	},
-	"types": "./dist/main.d.ts",
+	"types": "./dist/index.d.ts",
 	"keywords": [
 		"binary",
 		"pixel",
