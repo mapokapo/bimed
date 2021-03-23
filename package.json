@@ -1,6 +1,6 @@
 {
 	"name": "bimed",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"description": "A binary-to-pixel image encoder/decoder",
 	"main": "./dist/index.js",
 	"scripts": {
