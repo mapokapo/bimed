@@ -1,17 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { encode, decode } = require("../dist/index");
+const { encode, decode } = require("../dist").default;
 
 const binary = "1111000011000011";
-console.log(binary);
+console.log(`Input binary: ${binary}`);
 
 const encoded = encode(binary, {
-	width: 16,
-	inverted: true,
+	width: 4,
+	scale: 2,
 });
-console.log(encoded);
+console.log(`Encoded data: ${encoded}`);
 
 const decoded = decode(encoded, {
-	inverted: true,
+	width: 4,
+	scale: 2,
 });
 console.log(decoded);
 if (decoded === binary) {

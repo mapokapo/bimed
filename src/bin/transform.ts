@@ -21,31 +21,22 @@ export const encodeImage = (
 	options: CliEncodeOptions,
 ): void => {
 	const values = encode(data, options);
-	const scale = options.scale as number;
-	const imageData = Uint8Array.from(values);
 	if (options.overwrite && fileExists(path)) {
 		fs.unlinkSync(path);
 	}
-	const image = sharp(imageData, {
+	sharp(Uint8Array.from(values), {
 		raw: {
-			width: options.width,
-			height: Math.ceil(values.length / options.width),
-			channels: 1,
+			width: options.width * (options.scale as number),
+			height: Math.ceil(
+				values.length / 3 / (options.scale as number) / options.width,
+			),
+			channels: 3,
 		},
-	});
-	image.metadata().then((metadata) => {
-		image
-			.resize({
-				width: (metadata.width as number) * scale,
-				height: (metadata.height as number) * scale,
-				fit: "contain",
-				kernel: "nearest",
-			})
-			.jpeg({
-				quality: 100,
-			})
-			.toFile(path);
-	});
+	})
+		.jpeg({
+			quality: 100,
+		})
+		.toFile(path);
 };
 export const decodeImage = (path: string, options: CliDecodeOptions): void => {
 	const decodeOptions: DecodeOptions = {
@@ -56,8 +47,7 @@ export const decodeImage = (path: string, options: CliDecodeOptions): void => {
 	const image = sharp(path);
 	image.metadata().then((metadata) => {
 		// The image width will always be divisible by options.scale (provided the scale was correct), because the scale was used during the creation of the image to multiply the width
-		const width = (metadata.width as number) / options.scale;
-		decodeOptions.width = width;
+		decodeOptions.width = (metadata.width as number) / options.scale;
 		image
 			.raw()
 			.toBuffer()
