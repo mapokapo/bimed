@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import yargs from "yargs/yargs";
 import path from "path";
-import { fileExists, isBinary, validateOptions } from "./../utils";
-import { encodeImage, decodeImage } from "./transform";
+import { validator } from "../utils";
+import { cliDecode, cliEncode } from "./cliTransform";
 
 yargs(process.argv.slice(2))
 	.command({
@@ -11,16 +11,18 @@ yargs(process.argv.slice(2))
 			"Encode the given binary string into an image with the given name",
 		builder: (y) => {
 			return y
-				.positional("binary", {
-					alias: "b",
+				.positional("b", {
+					alias: "binary",
 					type: "string",
 					describe: "Binary text in form of 1s and 0s",
+					demandOption: true,
 				})
-				.positional("file", {
-					alias: "f",
+				.positional("f", {
+					alias: "file",
 					type: "string",
 					describe:
 						"Name of the resulting image file (including the file extension)",
+					demandOption: true,
 				})
 				.option("i", {
 					alias: "inverted",
@@ -28,7 +30,6 @@ yargs(process.argv.slice(2))
 					describe:
 						"Whether 0s and 1s should be turned into white and black pixels respectively instead",
 					boolean: true,
-					default: false,
 				})
 				.option("o", {
 					alias: "overwrite",
@@ -36,14 +37,12 @@ yargs(process.argv.slice(2))
 					describe:
 						"Whether an existing file should be overwritten if it has the same name as the supplied file name",
 					boolean: true,
-					default: false,
 				})
 				.option("s", {
 					alias: "scale",
 					type: "number",
 					describe:
 						"By how much to multiply the width and height of the resulting image",
-					default: 1,
 				})
 				.options("w", {
 					alias: "width",
@@ -51,31 +50,18 @@ yargs(process.argv.slice(2))
 					describe: "Width of a single row of the binary data",
 					demandOption: true,
 				})
-				.check(({ b, f, o, s, w }) => {
-					try {
-						if (b && !isBinary(b as string))
-							throw new Error(
-								"Specified binary text must be comprised of 1s and 0s",
-							);
-						if (!o && fileExists(path.resolve(f as string)))
-							throw new Error("Specified file already exists");
-						if (!validateOptions._validateScale(s))
-							throw new RangeError("Scale option must be a positive integer");
-						if (!validateOptions._validateScale(w))
-							throw new TypeError("Width option must be a positive integer");
-					} catch (e) {
-						validateOptions._handleError(e);
-					}
+				.check(({ b, f, o }) => {
+					validator.cliEncode(b, f, o);
 					return true;
 				})
 				.strict();
 		},
 		handler: (argv) => {
-			encodeImage(argv.binary as string, path.resolve(argv.file as string), {
-				inverted: argv.inverted as boolean,
-				overwrite: argv.o as boolean,
-				scale: argv.scale as number,
-				width: argv.w as number,
+			cliEncode(argv.binary as string, path.resolve(argv.file as string), {
+				inverted: argv.i ? (argv.i as boolean) : false,
+				overwrite: argv.o ? (argv.o as boolean) : false,
+				scale: argv.s ? (argv.s as number) : 1,
+				width: argv.w ? (argv.w as number) : 1,
 			});
 		},
 	})
@@ -84,11 +70,12 @@ yargs(process.argv.slice(2))
 		describe: "Decode the given image to binary text",
 		builder: (y) => {
 			return y
-				.positional("file", {
-					alias: "f",
+				.positional("f", {
+					alias: "file",
 					type: "string",
 					describe:
-						"Name of the image file that contains binary data to decode (including the file extension)",
+						"Name of the image file that contains raw RGB data to decode (including the file extension)",
+					demandOption: true,
 				})
 				.option("i", {
 					alias: "inverted",
@@ -96,32 +83,23 @@ yargs(process.argv.slice(2))
 					describe:
 						"Whether the white/black pixels should be treated as 0s and 1s respectively instead",
 					boolean: true,
-					default: false,
 				})
 				.option("s", {
 					alias: "scale",
 					type: "number",
 					describe:
 						"By how much to multiply the width and height of the resulting image",
-					default: 1,
 				})
-				.check(({ f, s }) => {
-					try {
-						if (!fileExists(path.resolve(f as string)))
-							throw new Error("Specified file doesn't exist");
-						if (!validateOptions._validateScale(s))
-							throw new RangeError("Scale option must be a positive integer");
-					} catch (e) {
-						validateOptions._handleError(e);
-					}
+				.check(({ f }) => {
+					validator.cliDecode(f);
 					return true;
 				})
 				.strict();
 		},
 		handler: (argv) => {
-			decodeImage(path.resolve(argv.file as string), {
-				inverted: argv.inverted as boolean,
-				scale: argv.scale as number,
+			cliDecode(path.resolve(argv.file as string), {
+				inverted: argv.i ? (argv.i as boolean) : false,
+				scale: argv.s ? (argv.s as number) : 1,
 			});
 		},
 	})

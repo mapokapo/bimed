@@ -1,17 +1,17 @@
 {
 	"name": "bimed",
-	"version": "1.3.5",
+	"version": "1.4.6",
 	"description": "A binary-to-pixel image encoder/decoder",
 	"main": "./dist/index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
 		"prepublishOnly": "npm run build",
 		"build": "tsc",
 		"format": "prettier --write \"src/**/*.ts\"",
-		"lint": "eslint --fix ."
+		"lint": "eslint --fix .",
+		"docs": "jsdoc -c jsdoc.json"
 	},
 	"author": "mapokapo",
-	"repository": "https://github.com/mapokapo/bide",
+	"repository": "https://github.com/mapokapo/bimed",
 	"bin": {
 		"bimed": "./dist/bin/cli.js"
 	},
@@ -33,6 +33,7 @@
 		"eslint-config-prettier": "^8.1.0",
 		"eslint-plugin-prettier": "^3.3.1",
 		"prettier": "^2.2.1",
+		"typedoc": "^0.20.34",
 		"typescript": "^4.2.3"
 	},
 	"files": [

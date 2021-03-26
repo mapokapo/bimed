@@ -1,0 +1,38 @@
+{
+	"tags": {
+		"allowUnknownTags": ["category"]
+	},
+	"source": {
+		"include": ["./src"],
+		"includePattern": ".ts$",
+		"excludePattern": "(node_modules/|docs)"
+	},
+	"plugins": ["node_modules/better-docs/typescript"],
+	"opts": {
+		"encoding": "utf8",
+		"destination": "docs/",
+		"readme": "README.md",
+		"recurse": true,
+		"verbose": true,
+		"template": "better-docs"
+	},
+	"templates": {
+		"cleverLinks": false,
+		"monospaceLinks": false,
+		"search": true,
+		"better-docs": {
+			"name": "BIMED Documentation",
+			"logo": "images/logo.png",
+			"title": "BIMED Documentation",
+			"css": "style.css",
+			"trackingCode": "tracking-code-which-will-go-to-the-HEAD",
+			"hideGenerator": false,
+			"navLinks": [
+				{
+					"label": "Github",
+					"href": "https://github.com/mapokapo/bimed"
+				}
+			]
+		}
+	}
+}

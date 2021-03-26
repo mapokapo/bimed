@@ -1,4 +1,4 @@
-import { encode, decode } from "./main";
+import { encode, decode } from "./transform";
 
 export default {
 	encode,
