@@ -75,7 +75,7 @@ export const cliEncode = (
 	if (options.overwrite && fileExists(path)) {
 		fs.unlinkSync(path);
 	}
-	sharp(Uint8Array.from(values), {
+	sharp(Buffer.from(values), {
 		raw: {
 			width: options.width * (options.scale as number),
 			height: Math.ceil(

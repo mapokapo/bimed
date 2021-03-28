@@ -48,7 +48,6 @@ yargs(process.argv.slice(2))
 					alias: "width",
 					type: "number",
 					describe: "Width of a single row of the binary data",
-					demandOption: true,
 				})
 				.check(({ b, f, o }) => {
 					validator.cliEncode(b, f, o);
